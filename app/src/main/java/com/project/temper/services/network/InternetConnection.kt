@@ -1,13 +1,18 @@
 package com.project.temper.services.network
 
+import android.app.Application
 import android.content.Context
 import android.net.ConnectivityManager
+import com.project.temper.Temper
 
 object InternetConnection {
-    fun checkInternetConnection(context: Context): Boolean {
+
+    var app : Context = Temper.applicationContext()
+
+    fun checkInternetConnection(): Boolean {
         var isConnexted = false
 
-        val connect = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val connect = app.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
         val activeNetwork = connect.activeNetworkInfo
         if (activeNetwork != null) {

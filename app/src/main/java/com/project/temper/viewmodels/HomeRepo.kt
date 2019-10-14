@@ -1,9 +1,11 @@
 package com.project.temper.viewmodels
 
 import android.app.Application
+import android.content.Context
 import android.widget.Toast
 import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
+import com.project.temper.Temper
 import com.project.temper.modeldata.Data
 import com.project.temper.services.api.APIInterface
 import com.project.temper.services.api.ApiClient
@@ -13,24 +15,59 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.Dispatchers.Main
 
-class HomeRepo  (application: Application){
+class HomeRepo  (val apiInterface: APIInterface){
 
-    var app: Application = application
-    var apiInterface: APIInterface = ApiClient.client(application)
+
+
     var networkErrorHandler: NetworkErrorHandler = NetworkErrorHandler()
 
 
+    var job : CompletableJob? = null
 
-    fun getJobs(loding : ObservableField<Boolean>) : MutableLiveData<Data> {
+
+
+
+
+
+/*    fun getJobs(loding : ObservableField<Boolean>) : MutableLiveData<Data> {
+        job = Job()
+        return object : MutableLiveData<Data>(){
+            override fun onActive() {
+                super.onActive()
+                job?.let { job ->
+                    CoroutineScope(IO + job).launch {
+                        val res = apiInterface.getJobs()
+                        withContext(Main){
+                            value = res
+                            job.complete()
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+
+    }*/
+
+
+
+
+
+
+   fun getJobs(loding : ObservableField<Boolean>) : MutableLiveData<Data> {
 
         val result = MutableLiveData<Data>()
         var data = Data()
 
         loding.set(true)
 
-        if (!InternetConnection.checkInternetConnection(app))
-            Toast.makeText(app, "No internet connection you will miss the latest information ", Toast.LENGTH_LONG).show()
 
         apiInterface.getJobs()
             .subscribeOn(Schedulers.io())

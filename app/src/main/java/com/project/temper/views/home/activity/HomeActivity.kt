@@ -11,10 +11,12 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.project.temper.R
+import com.project.temper.Temper
 import com.project.temper.databinding.ActivityHomeBinding
 import com.project.temper.modeldata.Data
 import com.project.temper.modeldata.NetworkError
 import com.project.temper.viewmodels.HomeModelView
+import com.project.temper.viewmodels.HomeViewModelFactory
 import com.project.temper.views.home.adapter.JobAdapter
 import com.project.temper.views.login.LoginActivity
 import com.project.temper.views.singup.SingUpActivity
@@ -28,8 +30,10 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val factory = HomeViewModelFactory((application as Temper).apiInterface)
         bindingHome = DataBindingUtil.setContentView(this, R.layout.activity_home)
-        viewModelHome = ViewModelProviders.of(this).get(HomeModelView::class.java)
+        viewModelHome = ViewModelProviders.of(this,factory).get(HomeModelView::class.java)
         bindingHome.jobs = viewModelHome
     }
 
